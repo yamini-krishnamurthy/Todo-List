@@ -37,6 +37,17 @@ class TodoList extends React.Component {
     this.state = {
       entries: [{item: "Eat", checked:false}, {item: "Exercise", checked:false}]
     };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const entries = this.state.entries;
+    let index = entries.indexOf(e);
+    entries[index].checked = !e.checked;
+    entries[index].item = entries[index].checked ? <strike>{e.item}</strike> : e.item;
+    this.setState({
+      entries: entries
+    });
   }
 
   renderItem(e) {
@@ -46,7 +57,7 @@ class TodoList extends React.Component {
         onChange={this.handleChange}
       />
     );
-    }
+  }
 
   render() {
     return (
