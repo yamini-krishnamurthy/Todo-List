@@ -25,7 +25,7 @@ function ListItem(props) {
     <div>
         <input
           type="checkbox"
-          onClick={props.handleClick} />
+          onChange={props.handleChange} />
         {props.value}
     </div>
   );
@@ -39,23 +39,14 @@ class TodoList extends React.Component {
     };
   }
 
-  renderItem(e, i) {
-    let text= this.state.entries[i].checked ? <strike>{this.state.entries[i].item}</strike> : this.state.entries[i].item;
+  renderItem(e) {
     return (
-      <ListItem 
-        value={text}
-        onClick={() => this.handleClick(i)}
+      <ListItem
+        value={e.item}
+        onChange={this.handleChange}
       />
     );
-  }
-
-  handleClick(i) {
-    const entries = this.state.entries.slice();
-    entries[i].checked = !entries[i].checked;
-    this.setState({
-      entries: entries
-    });
-  }
+    }
 
   render() {
     return (
@@ -65,7 +56,7 @@ class TodoList extends React.Component {
         </div>
 
         <div className="list">
-          {this.state.entries.map((e, i) => this.renderItem(e, i))}
+          {this.state.entries.map((e) => this.renderItem(e))}
         </div>
       </div>
     );
@@ -76,4 +67,3 @@ ReactDOM.render(
   <TodoList />,
   document.getElementById('root')
 );
-
