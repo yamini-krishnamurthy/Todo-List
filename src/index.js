@@ -2,22 +2,42 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Input(props) {
-  return (
-    <div>
-      <input/>
-      <input/>
-      <button>{props.button}</button>
-    </div>
-  )
-}
+class Input extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      itemName: ""
+    };
 
-class AddEntry extends React.Component {
+    this.handleItemEnter = this.handleItemEnter.bind(this);
+  }
+
+  handleItemEnter(e) {
+    this.setState({
+      itemName: e.target.value
+    });
+  }
+
   render() {
     return (
-      <Input button="Add"/>
+      <div>
+        <input
+          value={this.state.itemName}
+          onClick={this.handleItemEnter}
+        />
+        <button
+          onClick={() => this.props.buttonClick(this.state.itemName)}>
+          {this.props.value}
+        </button>
+      </div>
     );
   }
+}
+
+function AddEntry(props) {
+  return (
+    <Input value="Add" buttonClick={props.addEntry} />
+  );
 }
 
 function ListItem(props) {
@@ -25,7 +45,8 @@ function ListItem(props) {
     <div>
         <input
           type="checkbox"
-          onChange={props.handleChange} />
+          onChange={props.handleChange}
+    />
         {props.value}
     </div>
   );
@@ -38,6 +59,7 @@ class TodoList extends React.Component {
       entries: [{item: "Eat", checked:false}, {item: "Exercise", checked:false}]
     };
     this.handleChange = this.handleChange.bind(this);
+    this.addEntry = this.addEntry.bind(this);
   }
 
   handleChange(e) {
@@ -45,6 +67,14 @@ class TodoList extends React.Component {
     let index = entries.indexOf(e);
     entries[index].checked = !e.checked;
     entries[index].item = entries[index].checked ? <strike>{e.item}</strike> : e.item;
+    this.setState({
+      entries: entries
+    });
+  }
+
+  addEntry(item) {
+    const entries = this.state.entries;
+    entries.push({item: item, checked: false});
     this.setState({
       entries: entries
     });
@@ -65,7 +95,6 @@ class TodoList extends React.Component {
         <div className="add-entry">
           <AddEntry />
         </div>
-
         <div className="list">
           {this.state.entries.map((e) => this.renderItem(e))}
         </div>
