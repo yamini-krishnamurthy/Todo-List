@@ -1,107 +1,104 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
-class Input extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      itemName: ""
-    };
-
-    this.handleItemEnter = this.handleItemEnter.bind(this);
-  }
-
-  handleItemEnter(e) {
-    this.setState({
-      itemName: e.target.value
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <input
-          value={this.state.itemName}
-          onClick={this.handleItemEnter}
-        />
-        <button
-          onClick={() => this.props.buttonClick(this.state.itemName)}>
-          {this.props.value}
-        </button>
-      </div>
-    );
-  }
-}
-
-function AddEntry(props) {
-  return (
-    <Input value="Add" buttonClick={props.addEntry} />
-  );
-}
+import AddEntry from './AddEntry'
 
 function ListItem(props) {
   return (
     <div>
-        <input
-          type="checkbox"
-          onChange={props.handleChange}
-    />
+      <div class="listItem" onClick={props.handleItem}>
         {props.value}
+      </div>
+      <button onClick={props.handleTrash}>
+        Trash
+      </button>
     </div>
   );
 }
+
 
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      entries: [{item: "Eat", checked:false}, {item: "Exercise", checked:false}]
+      entries: []
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.addEntry = this.addEntry.bind(this);
+
+    this.handleItem = this.handleItem.bind(this);
+    this.handleTrash = this.handleTrash.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
   }
 
-  handleChange(e) {
-    const entries = this.state.entries;
-    let index = entries.indexOf(e);
-    entries[index].checked = !e.checked;
-    entries[index].item = entries[index].checked ? <strike>{e.item}</strike> : e.item;
-    this.setState({
-      entries: entries
-    });
-  }
+  renderListItem(e) {
+    if(e.struck) {
+      return (
+        <ListItem
+          key={e.key}
+          value={<strike>{e.item}</strike>}
+          handleTrash={() => this.handleTrash(e)}
+          handleItem={() => this.handleItem(e)}
+        />
+      );
+    }
 
-  addEntry(item) {
-    const entries = this.state.entries;
-    entries.push({item: item, checked: false});
-    this.setState({
-      entries: entries
-    });
-  }
-
-  renderItem(e) {
-    return (
+    else {
+     return(
       <ListItem
-        value={e.item}
-        onChange={this.handleChange}
-      />
-    );
+          key={e.key}
+          value={e.item}
+          handleTrash={() => this.handleTrash(e)}
+          handleItem={() => this.handleItem(e)}
+        />
+      );
+    }
+  }
+
+  handleAdd(e) {
+    const entries = this.state.entries;
+    entries.push({item: e, struck: false, key: entries.length});
+    this.setState({
+      entries: entries
+    });
+  }
+
+  handleTrash(e) {
+    const entries = this.state.entries;
+    console.log(e);
+    for(let i = 0; i < entries.length; i++) {
+      if(entries[i] === e) {
+        entries.splice(i, 1);
+      }
+    }
+
+    this.setState({
+      entries: entries
+    });
+  }
+
+  handleItem(e) {
+    const entries = this.state.entries;
+    let index = entries.findIndex(ele => e.key === ele.key);
+    entries[index].struck = !entries[index].struck;
+    this.setState({
+      entries: entries
+    });
   }
 
   render() {
     return (
       <div>
-        <div className="add-entry">
-          <AddEntry />
+        <div class="add-entry">
+          <AddEntry handleAdd={this.handleAdd}/>
         </div>
-        <div className="list">
-          {this.state.entries.map((e) => this.renderItem(e))}
+        <div class="todo-list">
+          {this.state.entries.map((e) => this.renderListItem(e))}
         </div>
       </div>
     );
   }
+
 }
+
 
 ReactDOM.render(
   <TodoList />,
