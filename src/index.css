@@ -1,4 +1,54 @@
-input, button { 
-  color: black
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono');
+
+body {
+  margin: 0;
+  background: #FFF;
+  padding: 2em 3em;
 }
 
+.todo-list {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.item-name {
+  word-wrap: normal;
+}
+
+ul {
+ list-style: none;
+ box-shadow: 0 0 20px #EEE;
+ padding: 0;
+ border-radius: 2px;
+}
+
+li {
+  border-bottom: 2px solid transparent;
+  padding: 10px 25px;
+  background: #FFF;
+  transition: background 0.5s;
+}
+
+li.struck:hover {
+  background: #8c5555;
+}
+
+li.unstruck:hover {
+  background: #efe1e1;
+}
+
+li.struck {
+  background: #c99797;
+}
+
+li.unstruck {
+  background: #FFF;
+}
+
+#trash-button {
+  float: right;
+}
+
+.font {
+  font-family:"Fira Mono";
+}
