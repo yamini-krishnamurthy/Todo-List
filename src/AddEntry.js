@@ -25,7 +25,7 @@ class AddEntry extends React.Component {
 
       <form onSubmit={this.handleSubmit}>
         <label>
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
+          <input type="text" placeholder="Add a task..." value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Add" />
       </form>

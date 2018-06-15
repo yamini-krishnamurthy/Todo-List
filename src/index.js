@@ -2,17 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import AddEntry from './AddEntry'
+import 'font-awesome/css/font-awesome.min.css';
 
 function ListItem(props) {
   return (
-    <div>
-      <div class="listItem" onClick={props.handleItem}>
+    <li className={`${props.styleName}`} onClick={props.handleItem}>
+      <span class="item-name font">
         {props.value}
-      </div>
-      <button onClick={props.handleTrash}>
-        Trash
+      </span>
+      <button id="trash-button" onClick={props.handleTrash}>
+        <i className="fa fa-trash"></i>
       </button>
-    </div>
+    </li>
   );
 }
 
@@ -33,20 +34,22 @@ class TodoList extends React.Component {
     if(e.struck) {
       return (
         <ListItem
+          styleName="struck"
           key={e.key}
           value={<strike>{e.item}</strike>}
-          handleTrash={() => this.handleTrash(e)}
+          handleTrash={(event) => this.handleTrash(event, e)}
           handleItem={() => this.handleItem(e)}
         />
       );
     }
 
     else {
-     return(
-      <ListItem
+      return(
+        <ListItem
+          styleName="unstruck"
           key={e.key}
           value={e.item}
-          handleTrash={() => this.handleTrash(e)}
+          handleTrash={(event) => this.handleTrash(event, e)}
           handleItem={() => this.handleItem(e)}
         />
       );
@@ -61,9 +64,9 @@ class TodoList extends React.Component {
     });
   }
 
-  handleTrash(e) {
+  handleTrash(event, e) {
+    event.stopPropagation();
     const entries = this.state.entries;
-    console.log(e);
     for(let i = 0; i < entries.length; i++) {
       if(entries[i] === e) {
         entries.splice(i, 1);
@@ -76,6 +79,7 @@ class TodoList extends React.Component {
   }
 
   handleItem(e) {
+    console.log("hi");
     const entries = this.state.entries;
     let index = entries.findIndex(ele => e.key === ele.key);
     entries[index].struck = !entries[index].struck;
@@ -86,13 +90,10 @@ class TodoList extends React.Component {
 
   render() {
     return (
-      <div>
-        <div class="add-entry">
-          <AddEntry handleAdd={this.handleAdd}/>
-        </div>
-        <div class="todo-list">
-          {this.state.entries.map((e) => this.renderListItem(e))}
-        </div>
+      <div class="todo-list">
+        <h2>todo list.</h2>
+        <AddEntry handleAdd={this.handleAdd}/>
+        <ul>{this.state.entries.map((e) => this.renderListItem(e))}</ul>
       </div>
     );
   }
