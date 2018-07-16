@@ -4,6 +4,6 @@ import './index.css'
 import TodoList from './TodoList'
 
 ReactDOM.render(
-    <TodoList />,
+  <TodoList />,
   document.getElementById('root')
 )
